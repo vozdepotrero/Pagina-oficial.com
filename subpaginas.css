@@ -1,0 +1,1007 @@
+/* =========================================================
+   VOZ DE POTRERO — IDENTIDAD VISUAL DE LAS SUBPÁGINAS
+   Archivo: subpaginas.css
+
+   Portada, Artículo, Legal y No encontrado: sin cambios.
+   Contacto: se conserva su diseño y sus reglas originales.
+   Programas: se conserva su fondo, tarjetas y scroll originales.
+   ========================================================= */
+
+/* ---------- BASE COMPARTIDA ---------- */
+
+#view-noticias,
+#view-programas,
+#view-historia,
+#view-equipo,
+#view-comercial,
+#view-contacto {
+  --vp-ink: #f6f3ed;
+  --vp-muted: #b8bdc6;
+  --vp-gold: #e7b64e;
+  --vp-line: rgba(255, 255, 255, .13);
+  color: var(--vp-ink);
+}
+
+#view-noticias .panel-scroll,
+#view-programas .panel-scroll,
+#view-historia .panel-scroll,
+#view-equipo .panel-scroll,
+#view-comercial .panel-scroll,
+#view-contacto .panel-scroll {
+  isolation: isolate;
+  background: #10141c !important;
+  color: var(--vp-ink) !important;
+}
+
+#view-noticias .panel-inner,
+#view-programas .panel-inner,
+#view-historia .panel-inner,
+#view-equipo .panel-inner,
+#view-comercial .panel-inner,
+#view-contacto .panel-inner {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+  color: inherit;
+}
+
+#view-noticias .panel-heading h1,
+#view-programas .panel-heading h1,
+#view-historia .panel-heading h1,
+#view-equipo .panel-heading h1,
+#view-comercial .panel-heading h1,
+#view-contacto .panel-heading h1 {
+  color: inherit !important;
+  letter-spacing: -.045em;
+}
+
+#view-noticias .panel-heading h1 em,
+#view-programas .panel-heading h1 em,
+#view-historia .panel-heading h1 em,
+#view-equipo .panel-heading h1 em,
+#view-comercial .panel-heading h1 em,
+#view-contacto .panel-heading h1 em {
+  color: var(--vp-gold);
+}
+
+#view-noticias .panel-lead,
+#view-programas .panel-lead,
+#view-historia .panel-lead,
+#view-equipo .panel-lead,
+#view-comercial .panel-lead,
+#view-contacto .panel-lead {
+  color: var(--vp-muted) !important;
+  max-width: 720px;
+  line-height: 1.8;
+}
+
+#view-noticias .eyebrow,
+#view-programas .eyebrow,
+#view-historia .eyebrow,
+#view-equipo .eyebrow,
+#view-comercial .eyebrow,
+#view-contacto .eyebrow {
+  color: var(--vp-gold) !important;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-size: .72rem;
+}
+
+#view-noticias .home-return,
+#view-programas .home-return,
+#view-historia .home-return,
+#view-equipo .home-return,
+#view-comercial .home-return,
+#view-contacto .home-return {
+  color: var(--vp-ink) !important;
+  border-color: var(--vp-line);
+  transition: color .2s ease, border-color .2s ease;
+}
+
+#view-noticias .home-return:hover,
+#view-programas .home-return:hover,
+#view-historia .home-return:hover,
+#view-equipo .home-return:hover,
+#view-comercial .home-return:hover,
+#view-contacto .home-return:hover {
+  color: var(--vp-gold) !important;
+  border-color: var(--vp-gold);
+}
+
+/* ---------- SCROLL INTERNO ----------
+   Cada subpágina (menos Contacto) es un contenedor absoluto que
+   ocupa el alto restante bajo la cabecera y desplaza por dentro.
+   El respaldo 0px en var(--hh) evita que la regla completa se
+   invalide si la variable no está definida en esa vista.
+   ------------------------------------------------------------ */
+
+#view-noticias .panel-scroll,
+#view-programas .panel-scroll,
+#view-historia .panel-scroll,
+#view-equipo .panel-scroll,
+#view-comercial .panel-scroll {
+  position: absolute;
+  inset: var(--hh, 0px) 0 0;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+#view-noticias .panel-inner,
+#view-programas .panel-inner,
+#view-historia .panel-inner,
+#view-equipo .panel-inner,
+#view-comercial .panel-inner {
+  min-height: 100%;
+  padding-bottom: 90px;
+}
+
+/* ---------- FONDOS DE CABECERA (capa compartida) ---------- */
+
+#view-noticias .panel-scroll::before,
+#view-programas .panel-scroll::before,
+#view-historia .panel-scroll::before,
+#view-equipo .panel-scroll::before,
+#view-comercial .panel-scroll::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 440px;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center 42%;
+  opacity: .95;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 42%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 42%,
+    transparent 100%
+  );
+}
+
+/* =========================================================
+   NOTICIAS — CANCHA ABSTRACTA EN AZUL NOCHE
+   Círculo central y línea media en trazo fino, franjas
+   diagonales de luz de estadio. Sin fotografías.
+   ========================================================= */
+
+#view-noticias {
+  --vp-gold: #efbd57;
+}
+
+#view-noticias .panel-scroll {
+  background:
+    radial-gradient(
+      ellipse at 80% 8%,
+      rgba(62, 104, 151, .28),
+      transparent 46%
+    ),
+    radial-gradient(
+      ellipse at 10% 60%,
+      rgba(35, 62, 98, .18),
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      #111722 0%,
+      #0f1520 45%,
+      #0b0f15 100%
+    ) !important;
+}
+
+#view-noticias .panel-scroll::before {
+  height: 640px;
+  background-position: center 40%;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(9, 14, 22, .88),
+      rgba(9, 14, 22, .42)
+    ),
+    linear-gradient(
+      0deg,
+      #0b0f15 0%,
+      transparent 88%
+    ),
+    url("https://images.pexels.com/photos/15779126/pexels-photo-15779126.jpeg?auto=compress&cs=tinysrgb&w=1800");
+  filter: none;
+  opacity: .95;
+}
+
+#view-noticias .news-grid {
+  gap: 22px;
+}
+
+#view-noticias .news-grid > * {
+  color: #f6f3ed !important;
+  background: linear-gradient(
+    160deg,
+    rgba(36, 49, 69, .66),
+    rgba(15, 21, 32, .78)
+  ) !important;
+  border: 1px solid rgba(255, 255, 255, .13) !important;
+  border-radius: 5px 5px 16px 16px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .09),
+    0 18px 44px rgba(0, 0, 0, .3);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+#view-noticias .news-grid > *:hover {
+  transform: translateY(-5px);
+  border-color: rgba(239, 189, 87, .6) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .12),
+    0 24px 54px rgba(0, 0, 0, .36);
+}
+
+#view-noticias .news-grid h2,
+#view-noticias .news-grid h3 {
+  color: #fff !important;
+}
+
+#view-noticias .news-grid p,
+#view-noticias .news-grid small,
+#view-noticias .news-grid time {
+  color: #c1c8d4 !important;
+}
+
+/* =========================================================
+   PROGRAMAS — SE CONSERVA EL DISEÑO ORIGINAL
+   No modificar este apartado.
+   ========================================================= */
+
+#view-programas {
+  --vp-gold: #69d9e7;
+}
+
+#view-programas .panel-scroll {
+  background:
+    radial-gradient(
+      ellipse at 80% 15%,
+      rgba(21, 103, 139, .22),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      #081522,
+      #0b0e18 75%
+    ) !important;
+}
+
+#view-programas .panel-scroll::before {
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(5, 12, 23, .91),
+      rgba(5, 12, 23, .35)
+    ),
+    linear-gradient(
+      0deg,
+      #081522 0%,
+      transparent 90%
+    ),
+    url("https://images.pexels.com/photos/32007691/pexels-photo-32007691.jpeg?auto=compress&cs=tinysrgb&w=1800");
+}
+
+#view-programas .program-list,
+#view-programas .media-groups {
+  gap: 22px;
+}
+
+#view-programas .program-list > *,
+#view-programas .media-groups > *,
+#view-programas .media-group,
+#view-programas .media-card {
+  color: #f4f8fb !important;
+  background: rgba(12, 25, 41, .92) !important;
+  border: 1px solid rgba(105, 217, 231, .19) !important;
+  border-radius: 12px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .2);
+  transition: border-color .2s ease, transform .2s ease;
+}
+
+#view-programas .program-list > *:hover,
+#view-programas .media-groups > *:hover,
+#view-programas .media-card:hover {
+  border-color: rgba(105, 217, 231, .65) !important;
+  transform: translateY(-3px);
+}
+
+#view-programas .program-list h2,
+#view-programas .program-list h3,
+#view-programas .media-groups h2,
+#view-programas .media-groups h3,
+#view-programas .media-card h2,
+#view-programas .media-card h3 {
+  color: #fff !important;
+}
+
+/* =========================================================
+   HISTORIA — PAPEL CÁLIDO, POTRERO Y TARJETAS EDITORIALES
+   Franjas de césped segado en sepia, círculo de mitad de
+   cancha y viñeta de papel envejecido.
+   ========================================================= */
+
+#view-historia {
+  --vp-ink: #29251e;
+  --vp-muted: #625d53;
+  --vp-gold: #9b6c20;
+  --vp-line: rgba(70, 55, 34, .2);
+}
+
+#view-historia .panel-scroll {
+  background:
+    radial-gradient(
+      ellipse at 22% 8%,
+      rgba(120, 94, 52, .2),
+      transparent 48%
+    ),
+    radial-gradient(
+      ellipse at 100% 100%,
+      rgba(96, 70, 38, .16),
+      transparent 55%
+    ),
+    linear-gradient(
+      135deg,
+      #e2d2b2 0%,
+      #eee4d0 48%,
+      #e4d8c0 100%
+    ) !important;
+  color: #29251e !important;
+}
+
+#view-historia .panel-scroll::before {
+  height: 720px;
+  background-position: center 45%;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(232, 220, 195, .82),
+      rgba(232, 220, 195, .38)
+    ),
+    linear-gradient(
+      0deg,
+      #e9dfca 0%,
+      transparent 88%
+    ),
+    url("https://images.pexels.com/photos/1657322/pexels-photo-1657322.jpeg?auto=compress&cs=tinysrgb&w=1800");
+  filter: sepia(.9) saturate(.85) contrast(.95);
+  opacity: .9;
+}
+
+#view-historia .panel-heading h1 {
+  color: #29251e !important;
+}
+
+#view-historia .panel-heading h1 em {
+  color: #89601f !important;
+}
+
+#view-historia .panel-lead {
+  color: #504a40 !important;
+}
+
+#view-historia .home-return {
+  color: #29251e !important;
+}
+
+#view-historia .history-timeline {
+  border-color: rgba(104, 77, 38, .32) !important;
+}
+
+#view-historia .history-chapter {
+  position: relative;
+  color: #29251e !important;
+  background: linear-gradient(
+    150deg,
+    rgba(255, 252, 244, .56),
+    rgba(247, 238, 220, .3)
+  ) !important;
+  border: 1px solid rgba(116, 84, 42, .28) !important;
+  border-radius: 4px 16px 16px 4px;
+  box-shadow:
+    inset 3px 0 0 rgba(155, 108, 32, .55),
+    inset 0 1px 0 rgba(255, 255, 255, .65),
+    0 16px 38px rgba(83, 62, 31, .13),
+    0 2px 6px rgba(83, 62, 31, .08) !important;
+  -webkit-backdrop-filter: blur(9px) saturate(1.1);
+  backdrop-filter: blur(9px) saturate(1.1);
+}
+
+#view-historia .history-chapter h2,
+#view-historia .history-chapter h3,
+#view-historia .history-end p {
+  color: #29251e !important;
+}
+
+#view-historia .history-chapter p:not(.eyebrow) {
+  color: #4f473a !important;
+  line-height: 1.85;
+}
+
+#view-historia .history-number {
+  color: #9b6c20 !important;
+}
+
+/* =========================================================
+   EQUIPO — VERDE CANCHA ABSTRACTO
+   Franjas de césped, área y semicírculo en trazo fino.
+   ========================================================= */
+
+#view-equipo {
+  --vp-gold: #c7e2a1;
+}
+
+#view-equipo .panel-scroll {
+  background:
+    radial-gradient(
+      ellipse at 15% 12%,
+      rgba(63, 111, 71, .26),
+      transparent 44%
+    ),
+    radial-gradient(
+      ellipse at 92% 70%,
+      rgba(46, 88, 62, .16),
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      #101a17,
+      #0a1110 75%
+    ) !important;
+}
+
+#view-equipo .panel-scroll::before {
+  height: 640px;
+  background-position: center 50%;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(8, 16, 13, .88),
+      rgba(8, 16, 13, .42)
+    ),
+    linear-gradient(
+      0deg,
+      #0a1110 0%,
+      transparent 88%
+    ),
+    url("https://images.pexels.com/photos/28827841/pexels-photo-28827841.jpeg?auto=compress&cs=tinysrgb&w=1800");
+  filter: none;
+  opacity: .95;
+}
+
+#view-equipo .team-grid {
+  gap: 22px;
+}
+
+#view-equipo .team-grid > *,
+#view-equipo .team-card {
+  color: #f4f4ed !important;
+  background: linear-gradient(
+    160deg,
+    rgba(32, 52, 43, .62),
+    rgba(14, 24, 20, .76)
+  ) !important;
+  border: 1px solid rgba(199, 226, 161, .18) !important;
+  border-radius: 10px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .07),
+    0 16px 40px rgba(0, 0, 0, .26);
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+  transition: transform .25s ease, border-color .25s ease;
+}
+
+#view-equipo .team-grid > *:hover,
+#view-equipo .team-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(199, 226, 161, .55) !important;
+}
+
+#view-equipo .team-grid h2,
+#view-equipo .team-grid h3,
+#view-equipo .team-card h2,
+#view-equipo .team-card h3 {
+  color: #fff !important;
+}
+
+#view-equipo .team-note {
+  color: #c4d0c6 !important;
+}
+
+/* =========================================================
+   COMERCIAL — NEGRO CARBÓN CON FILETES DORADOS
+   Trama diagonal de hilos dorados y resplandor cálido.
+   ========================================================= */
+
+#view-comercial {
+  --vp-gold: #e7b64e;
+}
+
+#view-comercial .panel-scroll {
+  background:
+    radial-gradient(
+      ellipse at 85% 14%,
+      rgba(157, 112, 32, .22),
+      transparent 40%
+    ),
+    radial-gradient(
+      ellipse at 8% 55%,
+      rgba(120, 88, 28, .1),
+      transparent 45%
+    ),
+    linear-gradient(
+      180deg,
+      #171714,
+      #0b0c0d 80%
+    ) !important;
+}
+
+#view-comercial .panel-scroll::before {
+  height: 640px;
+  background-position: center 45%;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(12, 11, 9, .9),
+      rgba(12, 11, 9, .5)
+    ),
+    linear-gradient(
+      0deg,
+      #0b0c0d 0%,
+      transparent 88%
+    ),
+    radial-gradient(
+      ellipse at 82% 28%,
+      rgba(204, 157, 65, .22),
+      transparent 55%
+    ),
+    url("https://images.pexels.com/photos/36603886/pexels-photo-36603886.jpeg?auto=compress&cs=tinysrgb&w=1800");
+  filter: none;
+  opacity: .95;
+}
+
+#view-comercial .metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 30px;
+}
+
+#view-comercial .metric-card {
+  min-width: 0;
+  padding: 22px 20px;
+  color: #f7f2e7 !important;
+  background: linear-gradient(
+    145deg,
+    rgba(44, 41, 33, .86),
+    rgba(20, 20, 18, .92)
+  ) !important;
+  border: 1px solid rgba(231, 182, 78, .28) !important;
+  border-radius: 5px 5px 15px 5px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 236, 190, .1),
+    0 16px 40px rgba(0, 0, 0, .3);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+#view-comercial .metric-card--primary {
+  background: linear-gradient(145deg, #e7b64e, #b9852e) !important;
+  border-color: #e7b64e !important;
+  color: #1b1710 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .35),
+    0 18px 44px rgba(185, 133, 46, .25);
+}
+
+#view-comercial .metric-label {
+  display: block;
+  color: inherit !important;
+  opacity: .83;
+  font-size: .78rem;
+  line-height: 1.5;
+}
+
+#view-comercial .metric-card strong {
+  display: block;
+  margin: 13px 0 8px;
+  color: inherit !important;
+  font-size: clamp(1.45rem, 2.4vw, 2.15rem);
+  line-height: 1.1;
+  letter-spacing: -.045em;
+  overflow-wrap: anywhere;
+}
+
+#view-comercial .metric-caption {
+  display: block;
+  color: inherit !important;
+  opacity: .78;
+  font-size: .76rem;
+  line-height: 1.5;
+}
+
+#view-comercial .metric-card--instagram {
+  border-top: 3px solid #d78cae !important;
+}
+
+#view-comercial .metric-card--youtube {
+  border-top: 3px solid #e65e53 !important;
+}
+
+#view-comercial .metric-card--tiktok {
+  border-top: 3px solid #69d9e7 !important;
+}
+
+#view-comercial .commercial-intro {
+  color: #f7f2e7 !important;
+  border-top: 1px solid rgba(231, 182, 78, .28);
+  margin-top: 44px;
+  padding-top: 30px;
+}
+
+#view-comercial .commercial-intro h2,
+#view-comercial .commercial-cta h2 {
+  color: #fff !important;
+}
+
+#view-comercial .commercial-intro > p {
+  color: #cdc9be !important;
+  line-height: 1.8;
+}
+
+#view-comercial .offers-grid {
+  gap: 15px;
+}
+
+#view-comercial .offer-card {
+  color: #f7f2e7 !important;
+  background: linear-gradient(
+    150deg,
+    rgba(44, 41, 33, .7),
+    rgba(22, 21, 18, .8)
+  ) !important;
+  border: 1px solid rgba(231, 182, 78, .22) !important;
+  border-radius: 5px 5px 14px 5px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 236, 190, .07),
+    0 14px 34px rgba(0, 0, 0, .26);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: border-color .2s ease, transform .2s ease;
+}
+
+#view-comercial .offer-card:hover {
+  border-color: rgba(231, 182, 78, .7) !important;
+  transform: translateY(-3px);
+}
+
+#view-comercial .offer-card h3 {
+  color: #fff !important;
+}
+
+#view-comercial .offer-card p {
+  color: #cdc9be !important;
+}
+
+#view-comercial .offer-card > span {
+  color: #e7b64e !important;
+}
+
+#view-comercial .commercial-cta {
+  margin-top: 26px;
+  padding: 28px;
+  color: #f7f2e7 !important;
+  background: linear-gradient(
+    120deg,
+    rgba(231, 182, 78, .16),
+    rgba(231, 182, 78, .04)
+  ) !important;
+  border: 1px solid rgba(231, 182, 78, .32) !important;
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .24);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* =========================================================
+   CONTACTO — BLOQUE ORIGINAL CONSERVADO
+   No modificar este apartado.
+   ========================================================= */
+
+#view-contacto {
+  --vp-gold: #f0c5ff;
+  --vp-muted: #c2c8dc;
+}
+
+#view-contacto .panel-scroll {
+  position: relative;
+  overflow-x: clip;
+  background:
+    radial-gradient(ellipse at 12% 22%, rgba(95, 73, 255, .19), transparent 34%),
+    radial-gradient(ellipse at 88% 65%, rgba(0, 211, 255, .12), transparent 36%),
+    linear-gradient(135deg, #080914, #101022 55%, #090d18) !important;
+}
+
+#view-contacto .panel-scroll::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  height: 100%;
+  pointer-events: none;
+  opacity: .48;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, .95) 1px, transparent 1.8px),
+    radial-gradient(circle, rgba(125, 108, 255, .9) 1px, transparent 2px),
+    radial-gradient(circle, rgba(74, 225, 255, .85) 1px, transparent 2px);
+  background-size: 97px 111px, 151px 167px, 211px 193px;
+  background-position: 0 0, 38px 55px, 100px 20px;
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 95%);
+  mask-image: linear-gradient(to bottom, #000, transparent 95%);
+  animation: vp-contact-particles 28s linear infinite;
+}
+
+#view-contacto .panel-scroll::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 8%;
+  left: 8%;
+  width: 84%;
+  height: 420px;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(113, 73, 255, .11), transparent 68%);
+  filter: blur(24px);
+  animation: vp-contact-glow 7s ease-in-out infinite alternate;
+}
+
+#view-contacto .contact-layout {
+  gap: clamp(28px, 5vw, 72px);
+}
+
+#view-contacto .contact-direct,
+#view-contacto .contact-socials {
+  color: #f3f2ff !important;
+}
+
+#view-contacto .contact-direct-label {
+  color: #9eabce !important;
+}
+
+#view-contacto .contact-direct a,
+#view-contacto .contact-socials a {
+  color: #b9a6ff !important;
+  transition: color .2s ease, text-shadow .2s ease;
+}
+
+#view-contacto .contact-direct a:hover,
+#view-contacto .contact-socials a:hover {
+  color: #79edff !important;
+  text-shadow: 0 0 18px rgba(121, 237, 255, .4);
+}
+
+#view-contacto .contact-form-wrap {
+  position: relative;
+  background: rgba(17, 19, 40, .8) !important;
+  border: 1px solid rgba(164, 148, 255, .3) !important;
+  border-radius: 18px;
+  box-shadow:
+    0 0 35px rgba(91, 70, 255, .08),
+    0 20px 70px rgba(0, 0, 0, .22);
+  backdrop-filter: blur(14px);
+}
+
+#view-contacto .contact-form {
+  color: #f4f2ff !important;
+  background: transparent !important;
+}
+
+#view-contacto .contact-form label {
+  color: #e7e5fb !important;
+}
+
+#view-contacto .contact-form input,
+#view-contacto .contact-form textarea,
+#view-contacto .contact-form select {
+  color: #f7f5ff !important;
+  background: rgba(6, 8, 23, .78) !important;
+  border: 1px solid rgba(161, 151, 220, .32) !important;
+  border-radius: 9px;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+#view-contacto .contact-form input::placeholder,
+#view-contacto .contact-form textarea::placeholder {
+  color: #8d91ae !important;
+}
+
+#view-contacto .contact-form input:focus,
+#view-contacto .contact-form textarea:focus,
+#view-contacto .contact-form select:focus {
+  outline: none;
+  border-color: #a995ff !important;
+  box-shadow: 0 0 0 3px rgba(133, 105, 255, .16);
+}
+
+#view-contacto .contact-form select option {
+  color: #f7f5ff;
+  background: #111328;
+}
+
+#view-contacto .form-submit {
+  color: #101020 !important;
+  background: linear-gradient(105deg, #c0a6ff, #78eaff) !important;
+  border: 0 !important;
+  border-radius: 9px;
+  box-shadow: 0 0 22px rgba(133, 105, 255, .17);
+  transition: filter .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+#view-contacto .form-submit:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(133, 105, 255, .3);
+}
+
+#view-contacto .form-privacy,
+#view-contacto .form-status,
+#view-contacto .field-error,
+#view-contacto .mailto-fallback {
+  color: #b7bdd7 !important;
+}
+
+#view-contacto .field-error {
+  color: #ff9fb3 !important;
+}
+
+#view-contacto .form-status {
+  overflow-wrap: anywhere;
+}
+
+/* ---------- BOTONES DE LAS SUBPÁGINAS ---------- */
+
+#view-noticias .hero-primary,
+#view-programas .hero-primary,
+#view-historia .hero-primary,
+#view-equipo .hero-primary,
+#view-comercial .hero-primary,
+#view-contacto .hero-primary {
+  transition: transform .2s ease, filter .2s ease;
+}
+
+#view-noticias .hero-primary:hover,
+#view-programas .hero-primary:hover,
+#view-historia .hero-primary:hover,
+#view-equipo .hero-primary:hover,
+#view-comercial .hero-primary:hover,
+#view-contacto .hero-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.07);
+}
+
+/* ---------- ESTADOS DE CARGA Y VACÍOS ---------- */
+
+#view-noticias .loading-state,
+#view-noticias .empty-state,
+#view-programas .loading-state,
+#view-programas .empty-state,
+#view-equipo .loading-state,
+#view-equipo .empty-state {
+  color: #c0c6d1 !important;
+  background: rgba(17, 23, 34, .9) !important;
+  border: 1px solid rgba(255, 255, 255, .12) !important;
+  border-radius: 10px;
+}
+
+/* ---------- ANIMACIONES ORIGINALES DE CONTACTO ---------- */
+
+@keyframes vp-contact-particles {
+  from {
+    background-position: 0 0, 38px 55px, 100px 20px;
+  }
+
+  to {
+    background-position: 0 220px, 38px -150px, 100px 260px;
+  }
+}
+
+@keyframes vp-contact-glow {
+  from {
+    opacity: .55;
+    transform: scale(.92) translateX(-1%);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.08) translateX(1%);
+  }
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 1000px) {
+  #view-comercial .metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  #view-noticias .news-grid,
+  #view-programas .program-list,
+  #view-programas .media-groups,
+  #view-equipo .team-grid,
+  #view-comercial .offers-grid {
+    gap: 14px;
+  }
+
+  #view-comercial .metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  #view-comercial .metric-card {
+    padding: 17px 13px;
+  }
+
+  #view-comercial .metric-card strong {
+    font-size: clamp(1.3rem, 6vw, 1.8rem);
+  }
+
+  #view-comercial .commercial-cta {
+    padding: 20px;
+  }
+
+  #view-contacto .contact-form-wrap {
+    border-radius: 13px;
+  }
+
+  #view-programas .panel-scroll::before {
+    height: 360px;
+  }
+
+  #view-noticias .panel-scroll::before,
+  #view-historia .panel-scroll::before,
+  #view-equipo .panel-scroll::before,
+  #view-comercial .panel-scroll::before {
+    height: 480px;
+  }
+}
+
+/* ---------- ACCESIBILIDAD ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  #view-contacto .panel-scroll::before,
+  #view-contacto .panel-scroll::after {
+    animation: none !important;
+  }
+
+  #view-noticias .news-grid > *,
+  #view-programas .program-list > *,
+  #view-programas .media-card,
+  #view-equipo .team-grid > *,
+  #view-equipo .team-card,
+  #view-comercial .offer-card,
+  #view-contacto .form-submit {
+    transition: none !important;
+  }
+}

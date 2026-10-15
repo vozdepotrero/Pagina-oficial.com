@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050607">
+  <meta name="description" content="Voz de Potrero. Historias, deportes y comunidad contadas desde donde todo empieza. Medio deportivo de Rosario, Argentina.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Voz de Potrero">
+  <meta property="og:title" content="Voz de Potrero — El deporte nace en el barrio">
+  <meta property="og:description" content="Historias, deportes y comunidad contadas desde donde todo empieza.">
+  <link rel="canonical" href="./">
+  <link rel="icon" href="img/2368.png" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=4">
+  <title>Voz de Potrero — El deporte nace en el barrio</title>
+  <script src="app.js?v=4" defer></script>
+</head>
+<body class="admin">
+<main class="adm">
+  <header class="adm__top">
+    <a class="brand__word" href="/">Voz de <b>Potrero</b></a>
+    <span><span id="who" class="badge" hidden></span> <button class="btn btn--ghost btn--sm" id="logout" type="button" hidden>Salir</button></span>
+  </header>
+
+  <section id="login" aria-labelledby="login-title">
+    <h1 id="login-title">Ingresar</h1>
+    <form class="form" id="login-form" autocomplete="on">
+      <label>Usuario<input name="user" autocomplete="username" required></label>
+      <label>Contraseña<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="btn btn--gold" type="submit">Entrar</button>
+      <div class="form__status" id="login-status" role="status" aria-live="polite" hidden></div>
+    </form>
+  </section>
+
+  <section id="panel" hidden>
+    <div class="tabs" role="group" aria-label="Secciones">
+      <button class="tab" data-t="resumen" aria-pressed="true" type="button">Resumen</button>
+      <button class="tab" data-t="news" aria-pressed="false" type="button" hidden>Noticias</button>
+      <button class="tab" data-t="inq" aria-pressed="false" type="button" hidden>Consultas</button>
+    </div>
+
+    <div data-pane="resumen"><div class="card"><h3>Estado</h3><p id="mode-text"></p></div></div>
+
+    <div data-pane="news" hidden>
+      <div class="card"><h3 id="nf-title">Nueva noticia</h3>
+        <form class="form" id="news-form">
+          <label>Título<input name="title" required maxlength="140"></label>
+          <label>Slug (opcional)<input name="slug" maxlength="80"></label>
+          <label>Categoría<input name="category" maxlength="40"></label>
+          <label>Bajada<textarea name="summary" maxlength="300" style="min-height:80px"></textarea></label>
+          <label>Cuerpo<textarea name="body" maxlength="10000"></textarea></label>
+          <label>Estado<select name="status"><option value="draft">Borrador</option><option value="published">Publicada</option></select></label>
+          <div><button class="btn btn--gold" type="submit">Guardar</button> <button class="btn btn--ghost" id="nf-cancel" type="button" hidden>Cancelar edición</button></div>
+          <div class="form__status" id="news-status" role="status" aria-live="polite" hidden></div>
+        </form>
+      </div>
+      <div id="news-list"></div>
+    </div>
+
+    <div data-pane="inq" hidden><div id="inq-list"></div></div>
+  </section>
+</main>
+<script src="/admin.js" defer></script>
+</body>
+</html>
