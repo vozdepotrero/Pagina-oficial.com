@@ -27,7 +27,6 @@
   ];
 
   // ENTREVISTAS Y PROTAGONISTAS
-  // Los videos locales se reproducen desde la carpeta img.
   const INTERVIEWS = [
     {
       name: 'Elu Glaria',
@@ -53,11 +52,6 @@
       name: 'Horacio «Petaco» Carbonari',
       video: 'img/Horacio _Petaco_ Carbonari_.mp4',
       instagram: 'https://www.instagram.com/reel/Dc2M_8QxC59/?xtok=MnVzN2x6bGI2dHlj'
-    },
-    {
-      name: 'Pablo Javkin',
-      id: '12Obn5h2VhIpLbj4BP2vN01ZouNp6S2X9',
-      instagram: 'https://www.instagram.com/reel/DcHe-sWM6gt/?cplk=NTJyeDE5cHFzd2cw'
     },
     {
       name: 'Maxi Ariza',
@@ -655,45 +649,62 @@
       const title = make('h3', '', interview.name);
       const player = make('div', 'interview-player media-stage');
 
-      if (interview.video) {
-        const video = document.createElement('video');
+      const video = document.createElement('video');
 
-        video.className = 'interview-video';
-        video.src = interview.video;
-        video.title =
-          'Entrevista a ' + interview.name + ' — Voz de Potrero';
+      video.className = 'interview-video';
+      video.src = interview.video;
+      video.title =
+        'Entrevista a ' + interview.name + ' — Voz de Potrero';
 
-        video.controls = true;
-        video.preload = 'metadata';
-        video.playsInline = true;
-        video.setAttribute('controlsList', 'nodownload');
+      video.controls = true;
+      video.preload = 'metadata';
+      video.playsInline = true;
+      video.setAttribute('controlsList', 'nodownload');
 
-        video.addEventListener('error', () => {
-          console.warn(
-            '[Voz de Potrero] No se pudo cargar el video:',
-            interview.video
-          );
+      const playButton = make(
+        'button',
+        'interview-play',
+        '▶ VER ENTREVISTA'
+      );
+
+      playButton.type = 'button';
+      playButton.setAttribute(
+        'aria-label',
+        'Reproducir entrevista a ' + interview.name
+      );
+
+      playButton.addEventListener('click', () => {
+        const playPromise = video.play();
+
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch((error) => {
+            console.warn(
+              '[Voz de Potrero] No se pudo iniciar el video:',
+              error
+            );
+          });
+        }
+      });
+
+      video.addEventListener('play', () => {
+        $$('.interview-video').forEach((otherVideo) => {
+          if (otherVideo !== video) {
+            otherVideo.pause();
+          }
         });
 
-        player.appendChild(video);
-      } else if (interview.id) {
-        const iframe = document.createElement('iframe');
+        player.classList.add('is-playing');
+      });
 
-        iframe.src =
-          'https://drive.google.com/file/d/' +
-          encodeURIComponent(interview.id) +
-          '/preview';
+      video.addEventListener('error', () => {
+        console.warn(
+          '[Voz de Potrero] No se pudo cargar el video:',
+          interview.video
+        );
+      });
 
-        iframe.title =
-          'Entrevista a ' + interview.name + ' — Voz de Potrero';
-
-        iframe.loading = 'lazy';
-        iframe.allow = 'autoplay; fullscreen';
-        iframe.allowFullscreen = true;
-        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-
-        player.appendChild(iframe);
-      }
+      player.appendChild(video);
+      player.appendChild(playButton);
 
       const description = make(
         'p',
