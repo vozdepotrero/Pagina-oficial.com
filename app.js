@@ -1,3 +1,4 @@
+
 /* Voz de Potrero V1 — navegación, entrevistas, contenido y contacto */
 (function () {
   'use strict';
@@ -26,32 +27,31 @@
   ];
 
   // ENTREVISTAS Y PROTAGONISTAS
-  // Para agregar una entrevista nueva, incorporá otro objeto a esta lista.
-  // El video se reproduce desde Google Drive y el enlace lleva al Reel original.
+  // Los videos locales se reproducen desde la carpeta img.
   const INTERVIEWS = [
     {
       name: 'Elu Glaria',
-      id: '1-gmV8h5x3QRqoqOKlTBxX-etXmlEcENY',
+      video: 'img/eluglaria.mp4',
       instagram: 'https://www.instagram.com/reel/DfGHZWJMOQf/?dlrf=N29yaWJ1ZHZ4MXBi'
     },
     {
       name: 'Claudio Giglioni',
-      id: '1FmCi1mT5STJ3LVGF7g7jMijZ4g34VzsP',
+      video: 'img/Claudio Giglioni.mp4',
       instagram: 'https://www.instagram.com/reel/DQnJzePAQBT/?dlrf=emUwaHhpZ3luMWxi'
     },
     {
       name: 'Julián Bricco',
-      id: '1n44hlFbm1MJqfftCHgZOTVkrWUcOeu0O',
+      video: 'img/Julián Bricco.mp4',
       instagram: 'https://www.instagram.com/reel/DRGL6jWAfE_/?mdxt=MXNpbXFzeHRzb3l0cQ=='
     },
     {
       name: 'Agostina Hein',
-      id: '1lbvn0PHRE1VeflLeXgfj8Kl1BkvaAg1J',
+      video: 'img/Agostina Hein_.mp4',
       instagram: 'https://www.instagram.com/reel/DdW05JEsx7A/?srtk=enlhbXNtZDRxam54'
     },
     {
       name: 'Horacio «Petaco» Carbonari',
-      id: '1dQPg_n3XeK-qnOnhMhVkDqTokdB8dyGC',
+      video: 'img/Horacio _Petaco_ Carbonari_.mp4',
       instagram: 'https://www.instagram.com/reel/Dc2M_8QxC59/?xtok=MnVzN2x6bGI2dHlj'
     },
     {
@@ -61,7 +61,7 @@
     },
     {
       name: 'Maxi Ariza',
-      id: '1pBlx6PtrI70J1HHqkD5lGC7-to9mqmr8',
+      video: 'img/maxi ariza.mp4',
       instagram: 'https://www.instagram.com/reel/DafosDAs8H1/?rpxt=MTZteHVwcmhuc2V0'
     }
   ];
@@ -598,19 +598,16 @@
       return null;
     }
 
-    // Si el contenedor ya existe en el HTML, lo reutilizamos.
     let container = $('#interviews-list', view);
 
     if (container) return container;
 
-    // Si quedó el antiguo contenedor de noticias, lo retiramos.
     const oldNewsList = $('#news-list', view);
 
     if (oldNewsList) {
       oldNewsList.remove();
     }
 
-    // Buscamos el espacio principal de la sección.
     const contentArea =
       $('.panel-inner', view) ||
       $('.panel-scroll', view) ||
@@ -658,22 +655,45 @@
       const title = make('h3', '', interview.name);
       const player = make('div', 'interview-player media-stage');
 
-      const iframe = document.createElement('iframe');
+      if (interview.video) {
+        const video = document.createElement('video');
 
-      iframe.src =
-        'https://drive.google.com/file/d/' +
-        encodeURIComponent(interview.id) +
-        '/preview';
+        video.className = 'interview-video';
+        video.src = interview.video;
+        video.title =
+          'Entrevista a ' + interview.name + ' — Voz de Potrero';
 
-      iframe.title =
-        'Entrevista a ' + interview.name + ' — Voz de Potrero';
+        video.controls = true;
+        video.preload = 'metadata';
+        video.playsInline = true;
+        video.setAttribute('controlsList', 'nodownload');
 
-      iframe.loading = 'lazy';
-      iframe.allow = 'autoplay; fullscreen';
-      iframe.allowFullscreen = true;
-      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+        video.addEventListener('error', () => {
+          console.warn(
+            '[Voz de Potrero] No se pudo cargar el video:',
+            interview.video
+          );
+        });
 
-      player.appendChild(iframe);
+        player.appendChild(video);
+      } else if (interview.id) {
+        const iframe = document.createElement('iframe');
+
+        iframe.src =
+          'https://drive.google.com/file/d/' +
+          encodeURIComponent(interview.id) +
+          '/preview';
+
+        iframe.title =
+          'Entrevista a ' + interview.name + ' — Voz de Potrero';
+
+        iframe.loading = 'lazy';
+        iframe.allow = 'autoplay; fullscreen';
+        iframe.allowFullscreen = true;
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+
+        player.appendChild(iframe);
+      }
 
       const description = make(
         'p',
