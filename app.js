@@ -26,7 +26,7 @@
     { id: 'yt-3', platform: 'youtube', label: 'Ver transmisión en YouTube', url: 'https://www.youtube.com/live/uWWit2ONDlg?si=PboRKgdYI1gwh8Fy', youtubeId: 'uWWit2ONDlg' }
   ];
 
-  // ENTREVISTAS Y PROTAGONISTAS
+  /* ENTREVISTAS */
   const INTERVIEWS = [
     {
       name: 'Elu Glaria',
@@ -60,15 +60,20 @@
     }
   ];
 
+  /*
+   * Las secciones internas utilizan hashes.
+   * Así GitHub Pages conserva la carpeta del proyecto
+   * y no intenta abrir rutas inexistentes en la raíz del dominio.
+   */
   const ROUTES = {
-    home: '/',
-    entrevistas: '/entrevistas',
-    programas: '/programas',
-    historia: '/historia',
-    equipo: '/equipo',
-    comercial: '/comercial',
-    contacto: '/contacto',
-    legal: '/legal'
+    home: '#home',
+    entrevistas: '#entrevistas',
+    programas: '#programas',
+    historia: '#historia',
+    equipo: '#equipo',
+    comercial: '#comercial',
+    contacto: '#contacto',
+    legal: '#legal'
   };
 
   const HASH_VIEWS = {
@@ -78,7 +83,8 @@
     '#historia': 'historia',
     '#equipo': 'equipo',
     '#comercial': 'comercial',
-    '#contacto': 'contacto'
+    '#contacto': 'contacto',
+    '#legal': 'legal'
   };
 
   const META = {
@@ -138,8 +144,12 @@
 
   function make(tag, className, text) {
     const node = document.createElement(tag);
+
     if (className) node.className = className;
-    if (text !== undefined && text !== null) node.textContent = text;
+    if (text !== undefined && text !== null) {
+      node.textContent = text;
+    }
+
     return node;
   }
 
@@ -153,6 +163,7 @@
 
     try {
       const url = new URL(value);
+
       const allowedHosts = [
         'instagram.com',
         'www.instagram.com',
@@ -192,13 +203,14 @@
     try {
       data = await response.json();
     } catch (_) {
-      // Las respuestas sin JSON se consideran respuestas vacías.
+      // Respuesta sin JSON.
     }
 
     if (!response.ok) {
       const error = new Error(
         (data && data.error) || 'No pudimos completar la solicitud.'
       );
+
       error.status = response.status;
       error.data = data;
       throw error;
@@ -246,27 +258,36 @@
     }
   }
 
+  /* =======================================================
+     NAVEGACIÓN
+     ======================================================= */
+
   function parseURL(url) {
+    if (HASH_VIEWS[url.hash]) {
+      return {
+        view: HASH_VIEWS[url.hash],
+        url
+      };
+    }
+
     const path = url.pathname.replace(/\/+$/, '') || '/';
 
     if (
-      (path === '/' || path === '/index.html') &&
-      HASH_VIEWS[url.hash]
+      path === '/' ||
+      path === '/index.html' ||
+      path.endsWith('/Pagina-oficial.com') ||
+      path.endsWith('/Pagina-oficial.com/index.html')
     ) {
-      return { view: HASH_VIEWS[url.hash], url };
+      return {
+        view: 'home',
+        url
+      };
     }
 
-    if (path === '/' || path === '/index.html') {
-      return { view: 'home', url };
-    }
-
-    for (const [view, route] of Object.entries(ROUTES)) {
-      if (path === route) {
-        return { view, url };
-      }
-    }
-
-    return { view: 'notfound', url };
+    return {
+      view: 'notfound',
+      url
+    };
   }
 
   function routeFromLocation() {
@@ -275,9 +296,11 @@
 
   function applyMeta(viewName, url) {
     const details = META[viewName] || META.notfound;
+
     document.title = details[0];
 
     const description = $('meta[name="description"]');
+
     if (description) {
       description.setAttribute('content', details[1]);
     }
@@ -285,13 +308,15 @@
     const canonical = $('link[rel="canonical"]');
 
     if (canonical && url) {
-      const canonicalPath = url.pathname.replace(/\/+$/, '') || '/';
-      canonical.setAttribute('href', canonicalPath);
+      canonical.setAttribute(
+        'href',
+        url.origin + url.pathname
+      );
     }
   }
 
   function updateNav(viewName) {
-    $$('[data-nav]', header).forEach((link) => {
+    $$('[data-nav]', header || document).forEach((link) => {
       if (link.dataset.nav === viewName) {
         link.setAttribute('aria-current', 'page');
       } else {
@@ -304,8 +329,12 @@
     if (!nav || !menuButton) return;
 
     nav.classList.toggle('is-open', open);
+
     menuButton.setAttribute('aria-expanded', String(open));
-    menuButton.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    menuButton.setAttribute(
+      'aria-label',
+      open ? 'Cerrar menú' : 'Abrir menú'
+    );
 
     if (open) {
       const first = $('a', nav);
@@ -319,7 +348,10 @@
     const settings = options || {};
     const destination = views.get(name) || views.get('notfound');
 
-    if (!destination) return;
+    if (!destination) {
+      console.warn('[Voz de Potrero] No se encontró la vista:', name);
+      return;
+    }
 
     const actualName = destination.dataset.view;
     const previous = activeView;
@@ -355,7 +387,12 @@
     activeView = destination;
 
     updateNav(actualName);
-    applyMeta(actualName, settings.url || new URL(window.location.href));
+
+    applyMeta(
+      actualName,
+      settings.url || new URL(window.location.href)
+    );
+
     setMenu(false, false);
 
     const scrollPanel = $('.panel-scroll', destination);
@@ -388,7 +425,9 @@
     }
 
     if (settings.focus !== false) {
-      const heading = $('h1[tabindex="-1"]', destination) || $('h1', destination);
+      const heading =
+        $('h1[tabindex="-1"]', destination) ||
+        $('h1', destination);
 
       if (heading) {
         window.setTimeout(
@@ -401,38 +440,49 @@
 
   function navigate(name, options) {
     const settings = options || {};
-    let target = name;
+    const target = views.has(name) ? name : 'notfound';
 
-    if (!views.has(target)) {
-      target = 'notfound';
-    }
+    /*
+     * Conservamos la dirección base actual de GitHub Pages.
+     * Solamente cambiamos el hash de la sección.
+     */
+    const destinationURL = new URL(window.location.href);
 
-    const path = settings.path || ROUTES[target] || '/';
-    let destinationURL;
+    destinationURL.hash = ROUTES[target] || '#home';
 
-    try {
-      destinationURL = new URL(path, window.location.origin);
-    } catch (_) {
-      destinationURL = new URL(ROUTES[target] || '/', window.location.origin);
-    }
+    if (target === 'contacto') {
+      const reason =
+        settings.reason ||
+        destinationURL.searchParams.get('motivo');
 
-    if (settings.reason && target === 'contacto') {
-      destinationURL.searchParams.set('motivo', settings.reason);
+      if (reason) {
+        destinationURL.searchParams.set('motivo', reason);
+      }
     }
 
     const newAddress =
-      destinationURL.pathname + destinationURL.search + destinationURL.hash;
+      destinationURL.pathname +
+      destinationURL.search +
+      destinationURL.hash;
 
     const oldAddress =
-      window.location.pathname + window.location.search + window.location.hash;
+      window.location.pathname +
+      window.location.search +
+      window.location.hash;
 
     if (settings.push !== false && newAddress !== oldAddress) {
-      window.history.pushState({ view: target }, '', newAddress);
+      window.history.pushState(
+        { view: target },
+        '',
+        newAddress
+      );
     }
 
     if (target === 'contacto') {
-      const reason = settings.reason || destinationURL.searchParams.get('motivo');
-      setContactReason(reason);
+      setContactReason(
+        settings.reason ||
+        destinationURL.searchParams.get('motivo')
+      );
     }
 
     switchView(target, {
@@ -443,6 +493,7 @@
 
   function setContactReason(reason) {
     const select = $('#contact-reason');
+
     if (!select) return;
 
     const accepted = [
@@ -461,12 +512,14 @@
       nav &&
       menuButton &&
       nav.classList.contains('is-open') &&
+      header &&
       !header.contains(event.target)
     ) {
       setMenu(false, false);
     }
   }
 
+  /* Clics en enlaces internos */
   document.addEventListener('click', (event) => {
     closeMenuIfOutside(event);
 
@@ -483,7 +536,11 @@
 
     const link = event.target.closest('a[href]');
 
-    if (!link || link.target === '_blank' || link.hasAttribute('download')) {
+    if (
+      !link ||
+      link.target === '_blank' ||
+      link.hasAttribute('download')
+    ) {
       return;
     }
 
@@ -497,19 +554,27 @@
 
     if (url.origin !== window.location.origin) return;
 
+    /*
+     * Los enlaces con data-nav tienen prioridad.
+     */
     const declaredView = link.dataset.nav;
 
     if (declaredView && views.has(declaredView)) {
       event.preventDefault();
 
       navigate(declaredView, {
-        path: url.pathname + url.search + url.hash,
-        reason: link.dataset.reason || url.searchParams.get('motivo') || ''
+        reason:
+          link.dataset.reason ||
+          url.searchParams.get('motivo') ||
+          ''
       });
 
       return;
     }
 
+    /*
+     * Los enlaces con hashes también se procesan.
+     */
     const route = parseURL(url);
 
     if (route.view === 'notfound') return;
@@ -517,19 +582,25 @@
     event.preventDefault();
 
     navigate(route.view, {
-      path: url.pathname + url.search + url.hash,
       reason: url.searchParams.get('motivo') || ''
     });
   });
 
   if (menuButton) {
     menuButton.addEventListener('click', () => {
-      setMenu(menuButton.getAttribute('aria-expanded') !== 'true', true);
+      setMenu(
+        menuButton.getAttribute('aria-expanded') !== 'true',
+        true
+      );
     });
   }
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && nav && nav.classList.contains('is-open')) {
+    if (
+      event.key === 'Escape' &&
+      nav &&
+      nav.classList.contains('is-open')
+    ) {
       event.preventDefault();
       setMenu(false, true);
       return;
@@ -547,7 +618,10 @@
       if (event.shiftKey && index <= 0) {
         event.preventDefault();
         focusable[focusable.length - 1].focus();
-      } else if (!event.shiftKey && index === focusable.length - 1) {
+      } else if (
+        !event.shiftKey &&
+        index === focusable.length - 1
+      ) {
         event.preventDefault();
         focusable[0].focus();
       }
@@ -568,11 +642,13 @@
   });
 
   window.addEventListener('hashchange', () => {
-    if (window.location.pathname !== '/') return;
-
     const route = routeFromLocation();
 
-    if (HASH_VIEWS[window.location.hash]) {
+    if (route.view !== 'notfound') {
+      if (route.view === 'contacto') {
+        setContactReason(route.url.searchParams.get('motivo'));
+      }
+
       switchView(route.view, {
         focus: false,
         url: route.url
@@ -588,7 +664,9 @@
     const view = views.get('entrevistas');
 
     if (!view) {
-      console.warn('[Voz de Potrero] No se encontró la sección data-view="entrevistas".');
+      console.warn(
+        '[Voz de Potrero] No se encontró la sección entrevistas.'
+      );
       return null;
     }
 
@@ -609,7 +687,11 @@
 
     container = make('section', 'interviews-section');
     container.id = 'interviews-list';
-    container.setAttribute('aria-label', 'Entrevistas y protagonistas');
+
+    container.setAttribute(
+      'aria-label',
+      'Entrevistas y protagonistas'
+    );
 
     const heading = $('.panel-heading', contentArea);
 
@@ -622,15 +704,30 @@
     return container;
   }
 
+  function loadInterviews(force) {
+    const container = getInterviewsContainer();
+
+    if (!container || (interviewsLoaded && !force)) return;
+
+    interviewsLoaded = true;
+    container.setAttribute('aria-busy', 'true');
+    container.replaceChildren();
+
+    const introduction = make(
+      'p',
+      'interviews-introduction',
+      'Historias, experiencias y protagonistas del deporte, en primera persona.'
+    );
+
     container.appendChild(introduction);
 
-    const grid = make('div', 'media-grid');
+    const grid = make('div', 'interviews-grid');
 
     INTERVIEWS.forEach((interview) => {
-      const card = make('article', 'interview-card media-card');
+      const card = make('article', 'interview-card');
 
       const title = make('h3', '', interview.name);
-      const player = make('div', 'interview-player media-stage');
+      const player = make('div', 'interview-player');
 
       const video = document.createElement('video');
 
@@ -644,13 +741,14 @@
       video.playsInline = true;
       video.setAttribute('controlsList', 'nodownload');
 
-      const playButton = make(
-        'button',
-        'interview-play',
-        '▶ VER ENTREVISTA'
-      );
+      /*
+       * Botón de reproducción minimalista.
+       * El texto visible es solamente el símbolo de play.
+       */
+      const playButton = make('button', 'interview-play', '▶');
 
       playButton.type = 'button';
+
       playButton.setAttribute(
         'aria-label',
         'Reproducir entrevista a ' + interview.name
@@ -670,13 +768,15 @@
       });
 
       video.addEventListener('play', () => {
-        $$('.interview-video').forEach((otherVideo) => {
+        $$('.interview-video', container).forEach((otherVideo) => {
           if (otherVideo !== video) {
             otherVideo.pause();
           }
         });
 
         player.classList.add('is-playing');
+        playButton.classList.add('is-hidden');
+        playButton.setAttribute('hidden', '');
       });
 
       video.addEventListener('error', () => {
@@ -714,8 +814,6 @@
     });
 
     container.appendChild(grid);
-
-    interviewsLoaded = true;
     container.setAttribute('aria-busy', 'false');
   }
 
@@ -737,6 +835,7 @@
 
     try {
       const parsed = new URL(url);
+
       const match = parsed.pathname.match(
         /\/(?:live|shorts|embed)\/([A-Za-z0-9_-]{11})/
       );
@@ -804,12 +903,16 @@
   function makeMediaCard(item) {
     const url = safeExternalURL(item.url);
     const platform = item.platform;
+
     const card = make('article', 'media-card');
 
     card.dataset.platform = platform;
 
     const stage = make('div', 'media-stage');
-    stage.appendChild(platformIcon(platform, 'media-platform-icon'));
+
+    stage.appendChild(
+      platformIcon(platform, 'media-platform-icon')
+    );
 
     const title = platform === 'youtube'
       ? 'Ver transmisión en YouTube'
@@ -823,6 +926,7 @@
       const play = make('button', 'media-play', 'Reproducir');
 
       play.type = 'button';
+
       play.setAttribute(
         'aria-label',
         'Reproducir transmisión en YouTube'
@@ -832,6 +936,7 @@
         const iframe = document.createElement('iframe');
 
         iframe.className = 'media-player';
+
         iframe.src =
           'https://www.youtube-nocookie.com/embed/' +
           encodeURIComponent(id) +
@@ -839,9 +944,12 @@
 
         iframe.title = 'Reproducción de YouTube';
         iframe.loading = 'lazy';
+
         iframe.allow =
           'autoplay; encrypted-media; picture-in-picture; fullscreen';
+
         iframe.allowFullscreen = true;
+
         iframe.referrerPolicy = 'strict-origin-when-cross-origin';
 
         stage.replaceChildren(iframe);
@@ -849,7 +957,11 @@
 
       stage.appendChild(play);
     } else {
-      const open = make('a', 'media-open', title + ' ↗');
+      const open = make(
+        'a',
+        'media-open',
+        title + ' ↗'
+      );
 
       open.href = url;
       open.target = '_blank';
@@ -867,9 +979,15 @@
         ? 'Publicación original en la cuenta de Instagram.'
         : 'Video original en la plataforma TikTok.';
 
-    card.appendChild(make('p', 'media-description', description));
+    card.appendChild(
+      make('p', 'media-description', description)
+    );
 
-    const original = make('a', 'media-original', 'Ver original ↗');
+    const original = make(
+      'a',
+      'media-original',
+      'Ver original ↗'
+    );
 
     original.href = url;
     original.target = '_blank';
@@ -889,7 +1007,11 @@
     container.setAttribute('aria-busy', 'true');
 
     container.replaceChildren(
-      make('p', 'loading-state', 'Cargando contenidos audiovisuales…')
+      make(
+        'p',
+        'loading-state',
+        'Cargando contenidos audiovisuales…'
+      )
     );
 
     const items = await retrieveMedia();
@@ -907,7 +1029,9 @@
       const heading = make('header', 'media-group-heading');
 
       heading.appendChild(platformIcon(platform.key, ''));
-      heading.appendChild(make('h2', '', platform.title));
+      heading.appendChild(
+        make('h2', '', platform.title)
+      );
 
       group.appendChild(heading);
 
@@ -950,13 +1074,21 @@
         .forEach((item) => {
           const card = make('article', 'program-card');
 
-          card.appendChild(make('h2', '', item.title));
+          card.appendChild(
+            make('h2', '', item.title)
+          );
 
           if (item.summary) {
-            card.appendChild(make('p', '', item.summary));
+            card.appendChild(
+              make('p', '', item.summary)
+            );
           }
 
-          const link = make('a', '', 'Ver producción ↗');
+          const link = make(
+            'a',
+            '',
+            'Ver producción ↗'
+          );
 
           link.href = safeExternalURL(item.url);
           link.target = '_blank';
@@ -1010,7 +1142,10 @@
         make('div', 'member-initials', initials(name))
       );
 
-      card.appendChild(make('h2', '', name));
+      card.appendChild(
+        make('h2', '', name)
+      );
+
       container.appendChild(card);
     });
 
@@ -1033,10 +1168,17 @@
 
   function setFieldError(form, name, message) {
     const field = form.elements[name];
-    const error = $('[data-error-for="' + name + '"]', form);
+
+    const error = $(
+      '[data-error-for="' + name + '"]',
+      form
+    );
 
     if (field && typeof field.setAttribute === 'function') {
-      field.setAttribute('aria-invalid', message ? 'true' : 'false');
+      field.setAttribute(
+        'aria-invalid',
+        message ? 'true' : 'false'
+      );
     }
 
     if (error) {
@@ -1045,7 +1187,12 @@
   }
 
   function clearFieldErrors(form) {
-    ['nombre', 'email', 'motivo', 'mensaje'].forEach((name) => {
+    [
+      'nombre',
+      'email',
+      'motivo',
+      'mensaje'
+    ].forEach((name) => {
       setFieldError(form, name, '');
     });
   }
@@ -1072,7 +1219,8 @@
     }
 
     if (data.mensaje.length < 10) {
-      errors.mensaje = 'El mensaje debe tener al menos 10 caracteres.';
+      errors.mensaje =
+        'El mensaje debe tener al menos 10 caracteres.';
     }
 
     Object.keys(errors).forEach((name) => {
@@ -1083,7 +1231,8 @@
   }
 
   function composeMailto(data) {
-    const subject = 'Consulta — Voz de Potrero: ' + data.motivo;
+    const subject =
+      'Consulta — Voz de Potrero: ' + data.motivo;
 
     const body = [
       'Nombre: ' + data.nombre,
@@ -1186,5 +1335,32 @@
       }
     });
   }
+
+  /* =======================================================
+     INICIALIZACIÓN
+     ======================================================= */
+
+  function initializeApp() {
+    const route = routeFromLocation();
+
+    /*
+     * Si se ingresa directamente con un hash,
+     * se abre la sección correspondiente.
+     */
+    switchView(route.view, {
+      focus: false,
+      url: route.url
+    });
+
+    /*
+     * Si se ingresa a la web sin hash,
+     * se muestra Inicio.
+     */
+    if (!window.location.hash && route.view === 'home') {
+      updateNav('home');
+    }
+  }
+
+  initializeApp();
 
 })();
