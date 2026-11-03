@@ -622,23 +622,6 @@
     return container;
   }
 
-  function loadInterviews() {
-    const container = getInterviewsContainer();
-
-    if (!container || interviewsLoaded) return;
-
-    container.replaceChildren();
-
-    const heading = make('header', 'media-group-heading');
-    heading.appendChild(make('h2', '', 'Entrevistas y protagonistas'));
-    container.appendChild(heading);
-
-    const introduction = make(
-      'p',
-      'media-description',
-      'Historias, experiencias y voces de protagonistas del deporte y de nuestra comunidad.'
-    );
-
     container.appendChild(introduction);
 
     const grid = make('div', 'media-grid');
