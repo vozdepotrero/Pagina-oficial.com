@@ -206,19 +206,23 @@
       instagram: "https://www.instagram.com/reel/DafosDAs8H1/?rpxt=MTZteHVwcmhuc2V0"
     }
   ];
-
-  /* ---------- Render de tarjetas audiovisuales ---------- */
-  var programSection = document.querySelector(
-    '[data-view="programas"]'
+  
+  /* ---------- Render de tarjetas audiovisuales en Noticias y coberturas ---------- */
+  var newsSection = document.querySelector(
+    '[data-view="noticias"]'
   );
 
-  if (programSection) {
-    var wrap = programSection.querySelector(".wrap");
+  if (newsSection) {
+    var wrap = newsSection.querySelector(".wrap");
 
     if (wrap) {
       var oldGrid = wrap.querySelector(".media-grid");
 
       if (oldGrid) oldGrid.remove();
+
+      var oldHeading = wrap.querySelector(".media-group-heading");
+
+      if (oldHeading) oldHeading.remove();
 
       var heading = document.createElement("div");
       heading.className = "section-head media-group-heading";
@@ -238,7 +242,7 @@
 
       var index = document.createElement("span");
       index.className = "index";
-      index.textContent = "04 / AUDIOVISUAL";
+      index.textContent = "AUDIOVISUAL";
       heading.appendChild(index);
 
       var grid = document.createElement("div");
@@ -254,7 +258,7 @@
         var iframe = document.createElement("iframe");
         iframe.src =
           "https://drive.google.com/file/d/" +
-          encodeURIComponent(person.driveId) +
+          person.driveId +
           "/preview";
 
         iframe.title = "Video de " + person.name;
@@ -268,12 +272,12 @@
         var description = document.createElement("div");
         description.className = "media-description";
 
-        var personName = document.createElement("h3");
-        personName.textContent = person.name;
-
         var category = document.createElement("p");
         category.className = "tag";
         category.textContent = "ENTREVISTA / VOZ DE POTRERO";
+
+        var personName = document.createElement("h3");
+        personName.textContent = person.name;
 
         var original = document.createElement("a");
         original.className = "media-original";
