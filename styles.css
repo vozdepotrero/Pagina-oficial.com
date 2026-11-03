@@ -3090,6 +3090,11 @@ body:has(.app-shell) {
   padding-top: 40px;
   border-top: 1px solid rgba(232, 181, 72, 0.2);
 }
+.interviews-section {
+  margin-top: 64px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(232, 181, 72, 0.2);
+}
 
 .interviews-heading {
   margin-bottom: 28px;
@@ -3127,17 +3132,53 @@ body:has(.app-shell) {
 
 .interview-player {
   position: relative;
-  width: 100%;
+  width: min(100%, 320px);
   aspect-ratio: 9 / 16;
+  margin: 0 auto;
   overflow: hidden;
   border-radius: 8px;
   background: #000;
 }
 
-.interview-player iframe {
+.interview-player .interview-video {
+  display: block;
   width: 100%;
   height: 100%;
-  border: 0;
+  object-fit: contain;
+  background: #000;
+}
+
+.interview-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  padding: 14px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50px;
+  background: #E8B548;
+  color: #17130a;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.interview-play:hover {
+  background: #f2c765;
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.interview-player.is-playing .interview-play {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 .interview-card > a {
@@ -3160,5 +3201,15 @@ body:has(.app-shell) {
   .interviews-section {
     margin-top: 42px;
     padding-top: 30px;
+  }
+
+  .interview-player {
+    width: min(100%, 300px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interview-play {
+    transition: none;
   }
 }
