@@ -25,6 +25,46 @@
     { id: 'yt-3', platform: 'youtube', label: 'Ver transmisión en YouTube', url: 'https://www.youtube.com/live/uWWit2ONDlg?si=PboRKgdYI1gwh8Fy', youtubeId: 'uWWit2ONDlg' }
   ];
 
+  // ENTREVISTAS Y COBERTURAS
+  // Los videos se reproducen desde Google Drive.
+  const INTERVIEWS = [
+    {
+      name: 'Elu Glaria',
+      id: '1-gmV8h5x3QRqoqOKlTBxX-etXmlEcENY',
+      instagram: 'https://www.instagram.com/reel/DfGHZWJMOQf/?dlrf=N29yaWJ1ZHZ4MXBi'
+    },
+    {
+      name: 'Claudio Giglioni',
+      id: '1FmCi1mT5STJ3LVGF7g7jMijZ4g34VzsP',
+      instagram: 'https://www.instagram.com/reel/DQnJzePAQBT/?dlrf=emUwaHhpZ3luMWxi'
+    },
+    {
+      name: 'Julián Bricco',
+      id: '1n44hlFbm1MJqfftCHgZOTVkrWUcOeu0O',
+      instagram: 'https://www.instagram.com/reel/DRGL6jWAfE_/?mdxt=MXNpbXFzeHRzb3l0cQ=='
+    },
+    {
+      name: 'Agostina Hein',
+      id: '1lbvn0PHRE1VeflLeXgfj8Kl1BkvaAg1J',
+      instagram: 'https://www.instagram.com/reel/DdW05JEsx7A/?srtk=enlhbXNtZDRxam54'
+    },
+    {
+      name: 'Horacio «Petaco» Carbonari',
+      id: '1dQPg_n3XeK-qnOnhMhVkDqTokdB8dyGC',
+      instagram: 'https://www.instagram.com/reel/Dc2M_8QxC59/?xtok=MnVzN2x6bGI2dHlj'
+    },
+    {
+      name: 'Pablo Javkin',
+      id: '12Obn5h2VhIpLbj4BP2vN01ZouNp6S2X9',
+      instagram: 'https://www.instagram.com/reel/DcHe-sWM6gt/?cplk=NTJyeDE5cHFzd2cw'
+    },
+    {
+      name: 'Maxi Ariza',
+      id: '1pBlx6PtrI70J1HHqkD5lGC7-to9mqmr8',
+      instagram: 'https://www.instagram.com/reel/DafosDAs8H1/?rpxt=MTZteHVwcmhuc2V0'
+    }
+  ];
+
   const ROUTES = {
     home: '/',
     noticias: '/noticias',
@@ -334,12 +374,18 @@
       scrollPanel.scrollTop = 0;
     }
 
-    if (actualName === 'noticias') loadNews();
+    if (actualName === 'noticias') {
+      loadNews();
+      loadInterviews();
+    }
+
     if (actualName === 'programas') {
       loadPrograms();
       loadMedia();
     }
+
     if (actualName === 'equipo') loadTeam();
+
     if (actualName === 'articulo') {
       loadArticle(settings.slug || currentArticleSlug);
     }
@@ -652,6 +698,47 @@
     } finally {
       container.setAttribute('aria-busy', 'false');
     }
+  }
+
+  // CARGA Y REPRODUCCIÓN DE LAS SIETE ENTREVISTAS
+  function loadInterviews() {
+    const container = $('#interviews-list');
+
+    if (!container || container.dataset.loaded === 'true') return;
+
+    container.replaceChildren();
+
+    INTERVIEWS.forEach((interview) => {
+      const card = make('article', 'interview-card');
+
+      const title = make('h3', '', interview.name);
+
+      const player = make('div', 'interview-player');
+
+      const iframe = document.createElement('iframe');
+      iframe.src = 'https://drive.google.com/file/d/' +
+        encodeURIComponent(interview.id) + '/preview';
+      iframe.title = 'Entrevista a ' + interview.name + ' — Voz de Potrero';
+      iframe.loading = 'lazy';
+      iframe.allow = 'autoplay; fullscreen';
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+
+      player.appendChild(iframe);
+
+      const original = make('a', '', 'Ver publicación original en Instagram ↗');
+      original.href = interview.instagram;
+      original.target = '_blank';
+      original.rel = 'noopener noreferrer';
+
+      card.appendChild(title);
+      card.appendChild(player);
+      card.appendChild(original);
+
+      container.appendChild(card);
+    });
+
+    container.dataset.loaded = 'true';
   }
 
   async function loadArticle(slug) {
