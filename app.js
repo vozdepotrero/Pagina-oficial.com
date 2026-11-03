@@ -374,10 +374,9 @@
       scrollPanel.scrollTop = 0;
     }
 
-    if (actualName === 'noticias') {
-      loadNews();
-      loadInterviews();
-    }
+  if (actualName === 'entrevistas') {
+  loadInterviews();
+}
 
     if (actualName === 'programas') {
       loadPrograms();
